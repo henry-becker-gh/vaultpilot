@@ -1,4 +1,3 @@
-# secrets — never commit
 keypairs/
 *.json.keypair
 secrets/
@@ -8,3 +7,5 @@ node_modules/
 target/
 dist/bundle.js.map
 .DS_Store
+keys/
+.st_key
