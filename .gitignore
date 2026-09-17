@@ -1,0 +1,10 @@
+# secrets — never commit
+keypairs/
+*.json.keypair
+secrets/
+.env
+/workspace
+node_modules/
+target/
+dist/bundle.js.map
+.DS_Store

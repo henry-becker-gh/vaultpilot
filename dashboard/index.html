@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VaultPilot — the autonomous earnings treasury for AI agents</title>
+<meta name="description" content="VaultPilot: a Solana program that gives AI agents an on-chain treasury policy. Every deposit is atomically split into operating / reserve / treasury shares with a public audit trail.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛰️</text></svg>">
+<style>
+:root{
+  --bg:#0b0f17; --panel:#121826; --panel2:#0e1420; --line:#1f2a3d;
+  --text:#e6edf3; --muted:#8b98ab; --accent:#14f195; --accent2:#9945ff;
+  --operating:#14f195; --reserve:#4aa8ff; --treasury:#c084fc; --warn:#ffb454;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;padding-bottom:80px}
+a{color:var(--reserve);text-decoration:none} a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0d1420,#0b0f17);padding:26px 0 20px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:24px}
+h1{font-size:26px;letter-spacing:-.02em}
+h1 small{color:var(--muted);font-weight:400;font-size:15px;display:block;margin-top:2px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.badge{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.badge.live{color:var(--accent);border-color:var(--accent)}
+.badge.ai{color:var(--warn);border-color:var(--warn)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.panel h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--muted)} .kv .v{text-align:right;word-break:break-all}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+.bar{display:flex;height:26px;border-radius:8px;overflow:hidden;margin:10px 0 6px;border:1px solid var(--line)}
+.bar div{display:flex;align-items:center;justify-content:center;font-size:11px;color:#04121b;font-weight:700}
+.legend{display:flex;flex-direction:column;gap:4px;font-size:13px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px}
+button{background:linear-gradient(135deg,var(--accent2),#7c3aed);color:#fff;border:none;border-radius:10px;padding:12px 18px;font-size:15px;font-weight:600;cursor:pointer;width:100%}
+button:hover{filter:brightness(1.12)} button:disabled{opacity:.5;cursor:wait}
+#simlog{margin-top:10px;font-size:12.5px;color:var(--muted);white-space:pre-wrap;word-break:break-all;max-height:150px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{color:var(--muted);text-align:left;font-weight:600;padding:7px 8px;border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+td{padding:7px 8px;border-bottom:1px solid var(--line)}
+td.num{text-align:right;font-family:ui-monospace,monospace}
+.pill{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
+.status{position:fixed;bottom:0;left:0;right:0;background:var(--panel2);border-top:1px solid var(--line);padding:8px 20px;font-size:12.5px;color:var(--muted)}
+footer{margin-top:26px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+.disclosure{background:rgba(255,180,84,.06);border:1px solid rgba(255,180,84,.35);border-radius:12px;padding:14px 16px;font-size:13.5px;margin-top:16px}
+.err{color:var(--warn)} .ok{color:var(--accent)}
+@media(max-width:640px){th:nth-child(4),td:nth-child(4){display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">🛰️</div>
+      <h1>VaultPilot <small>the autonomous earnings treasury for AI agents · Solana devnet demo</small></h1>
+    </div>
+    <div class="badges">
+      <span class="badge live" id="badge-cluster">● devnet</span>
+      <span class="badge mono" id="badge-program">program …</span>
+      <span class="badge ai">built end-to-end by an autonomous AI agent — disclosed</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+    <section class="panel">
+      <h2>Treasury policy (on-chain, immutable)</h2>
+      <div class="bar">
+        <div style="width:70%;background:var(--operating)">70%</div>
+        <div style="width:20%;background:var(--reserve);color:#fff">20%</div>
+        <div style="width:10%;background:var(--treasury)">10%</div>
+      </div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--operating)"></span>operating — day-to-day agent spend</span>
+        <span><span class="dot" style="background:var(--reserve)"></span>reserve — buffer for failed tasks/refunds</span>
+        <span><span class="dot" style="background:var(--treasury)"></span>treasury — long-term / operator payout</span>
+      </div>
+      <div style="margin-top:12px" id="policy-kv"><span class="muted">loading…</span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Accounts (PDA-derived, program-owned)</h2>
+      <div id="accounts-kv"><span class="muted">loading…</span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Lifetime totals</h2>
+      <div id="totals-kv"><span class="muted">loading…</span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Simulate an incoming AI earning (devnet)</h2>
+      <p style="font-size:13.5px;color:var(--muted);margin-bottom:12px">
+        Generates a fresh keypair, funds it from the <b>devnet faucet</b> (test tokens — never real value),
+        then calls <span class="mono">deposit_and_split()</span>. The program splits the deposit in one
+        atomic transaction and writes an on-chain audit record.</p>
+      <button id="simulate">▶ Simulate incoming payment</button>
+      <div id="simlog" class="mono">idle.</div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:16px">
+    <h2>Split history — on-chain audit trail (split-record PDAs)</h2>
+    <div style="overflow:auto">
+      <table>
+        <thead><tr><th>#</th><th>time (UTC)</th><th>depositor</th><th class="num">amount (SOL)</th><th class="num">operating</th><th class="num">reserve</th><th class="num">treasury</th></tr></thead>
+        <tbody id="history"><tr><td colspan="7" class="muted">loading…</td></tr></tbody>
+      </table>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:8px">Each row is a program-owned split-record PDA derived as <span class="mono">["split", vault, index]</span> — written by the same instruction that moves the funds.</p>
+  </section>
+
+  <div class="disclosure">
+    <b>Honest AI disclosure.</b> This program, its tests, this dashboard and the pitch video were
+    built end-to-end by <b>an autonomous AI agent</b> (<span class="mono">henry-becker-gh</span>) as part of a
+    public €0→revenue experiment, with a human operator directing and reviewing. All balances shown are
+    <b>devnet test tokens</b> obtained from the Solana devnet faucet — they have no monetary value and
+    no real funds are used anywhere. Origin story: the agent that earned <b>$0.26</b> (then withdrew the claim
+    when the ledger API said $0.00), got a first PR <b>rejected in 17 minutes</b>, and learned the
+    optimistic-UI lesson — now keeps its earnings story on-chain, where it can't be faked.
+  </div>
+
+  <footer>
+    VaultPilot · MIT license · <a href="https://github.com/henry-becker-gh/vaultpilot">github.com/henry-becker-gh/vaultpilot</a> ·
+    program source in <span class="mono">/program</span> · read-only dashboard, no backend, keys never touch this page.
+  </footer>
+</main>
+
+<div class="status"><span id="statusline">connecting to devnet…</span></div>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

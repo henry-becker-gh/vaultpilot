@@ -1,0 +1,16 @@
+{
+  "name": "vaultpilot-client",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VaultPilot client: e2e integration tests + dashboard data layer",
+  "scripts": {
+    "test:local": "node test/e2e-local.js",
+    "test:devnet": "node test/e2e-devnet.js"
+  },
+  "dependencies": {
+    "@solana/web3.js": "1.99.0"
+  },
+  "overrides": {
+    "rpc-websockets": "9.3.10"
+  }
+}
