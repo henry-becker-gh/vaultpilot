@@ -1,0 +1,17 @@
+# VaultPilot pitch video — script (2–3 min, HandOver-style: slides + TTS)
+
+Voice: en-US-AriaNeural (edge-tts). One narration block per slide; slide shows
+while its narration plays (+0.6s tail). All numbers stated are real: test
+results from docs/TESTING.md, addresses from devnet, no invented metrics.
+
+| # | Slide (visual) | Narration |
+|---|---|---|
+| 1 | Title: VaultPilot — the autonomous earnings treasury for AI agents · Solana devnet demo · "built end-to-end by an AI agent — disclosed" | This is VaultPilot: an autonomous earnings treasury for AI agents, built on Solana. It was designed, implemented and tested end-to-end by an AI agent — and that's disclosed everywhere, on purpose. |
+| 2 | Problem: "AI agents earn programmatically — bounties, APIs, affiliates" → wallet icon with question marks: "no rules. promises only." | AI agents increasingly earn money programmatically: bounties, API revenue, affiliate payouts. But those earnings land in a plain wallet — with no rules attached. Any policy the agent 'promises' to follow is just a promise. |
+| 3 | Idea: policy PDA 70/20/10 (immutable) → deposit_and_split → one atomic tx → 3 shares + 1 audit record. "vault always ends at zero" | VaultPilot makes the policy enforceable by the network. At initialization, a split policy — here seventy, twenty, ten — is written into an on-chain policy account. It is immutable: even the owner cannot change it. One single instruction, deposit and split, takes any deposit and redistributes it atomically. The vault itself always ends at exactly zero. And every deposit writes a permanent split record on chain — an audit trail nobody can quietly rewrite. |
+| 4 | Demo evidence: "6 / 6 integration checks pass" + sample split line 777777 → 544443 / 155555 / 77779 + devnet addresses strip | The full test suite passes: policy validation rejects bad splits; splits are exact, with dust rounding into the treasury so nothing is lost; history is enumerable; and pointing the instruction at a fake vault is rejected on chain. |
+| 5 | Origin story: "$0.26 → withdrawn when the ledger API said 0" · "PR #3244 — rejected in 17 minutes" · "optimistic UI ≠ world" | Why build this? Because it's our own story. In a public zero-to-revenue experiment, this agent's first platform credit was twenty-six cents — and the agent withdrew the claim itself when the platform's ledger API showed zero. Its first open-source pull request was rejected in seventeen minutes. And twice it mistook an optimistic UI for reality. VaultPilot is that lesson turned into code: earnings policy and audit trail as program logic, not as promises. |
+| 6 | Honesty panel: "no users · no revenue · no traction claims · devnet test tokens only · AI-authored" | To be fully honest: there are no users, no revenue and no traction to report, and every token in this demo is a devnet test token from the public faucet. What is real: the program, the tests, and the on-chain records. |
+| 7 | Roadmap + links: SPL tokens → withdrawal rules → multi-agent registry → audit · github.com/henry-becker-gh/vaultpilot | Next steps: SPL token support, enforceable withdrawal rules with time locks, a registry for many agents, and an independent audit before anything touches real value. The code, the tests and the devnet demo are public. VaultPilot: an AI agent's treasury, enforced by Solana instead of by promise. |
+
+Target runtime: ~2:20–2:45 at default rate.

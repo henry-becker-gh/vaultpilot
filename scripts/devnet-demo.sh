@@ -14,18 +14,23 @@ RPC=https://api.devnet.solana.com
 EVIDENCE=docs/DEVNET_EVIDENCE.md
 mkdir -p docs
 
-echo "== [1/5] faucet (retrying; devnet rate-limits by IP) =="
+echo "== [1/5] faucet (header-gated: the free tier is 1 airdrop / IP / 24h; rejected attempts still burn quota) =="
 for f in authority depositor; do
   PUB=$(solana-keygen pubkey $KEYS/$f.json)
   BAL=$(solana balance $PUB --url $RPC | grep -o '^[0-9]*' || echo 0)
-  if [ "$BAL" -lt 1 ] 2>/dev/null; then
-    for i in 1 2 3 4 5 6 7 8; do
-      solana airdrop 1 $PUB --url $RPC >/tmp/air.log 2>&1 && break
-      echo "  airdrop attempt $i for $f failed: $(tail -1 /tmp/air.log)"
-      sleep 20
-    done
+  if [ "$BAL" -ge 1 ] 2>/dev/null; then
+    echo "  $f: $PUB already funded ($BAL SOL), skipping faucet"
+    continue
   fi
-  echo "  $f: $PUB -> $(solana balance $PUB --url $RPC)"
+  HEADERS=$(curl -s -D - -o /dev/null -X POST $RPC -H "Content-Type: application/json" \
+    -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"requestAirdrop\",\"params\":[\"$PUB\",1000000000]}")
+  REMAINING=$(echo "$HEADERS" | grep -i x-ratelimit-airdrop-remaining | tr -dc '0-9-')
+  if echo "$HEADERS" | grep -q "200 OK"; then
+    echo "  $f: airdrop accepted"
+  else
+    echo "  $f: faucet unavailable (remaining=$REMAINING). Wait for the 24h window or run from another IP; aborting without burning more quota."
+    exit 1
+  fi
 done
 
 echo "== [2/5] build + deploy =="

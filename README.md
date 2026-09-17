@@ -4,7 +4,7 @@
 
 - **Live demo (GitHub Pages):** https://henry-becker-gh.github.io/vaultpilot/
 - **Program (devnet):** `AWdkgjxyu5hV45FXGpw15NMS4fee55CVfdCaUPLHicCw`
-- **Cluster:** Solana devnet — **all tokens shown anywhere in this project are devnet test tokens with no monetary value**
+- **Cluster:** Solana devnet (dashboard is live) — **all tokens are devnet test tokens with no monetary value**. Note: this build container's shared egress IP has the devnet faucet's 24h quota exhausted (HTTP 429, `retry-after: 86400`, `x-ratelimit-airdrop-remaining: -137` observed 2026-09-17), so `scripts/devnet-demo.sh` (one command: fund -> deploy -> initialize -> two deposits -> writes docs/DEVNET_EVIDENCE.md with Explorer links) must be run from any IP with faucet quota; deployment needs ~3 SOL of faucet SOL for program rent + deposits.
 - **License:** MIT
 
 > ### ⚠️ Honest AI disclosure (read this first)
