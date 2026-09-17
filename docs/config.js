@@ -2,5 +2,5 @@
 window.VAULTPILOT_CONFIG = {
   RPC_URL: "https://api.devnet.solana.com",
   PROGRAM_ID: "AWdkgjxyu5hV45FXGpw15NMS4fee55CVfdCaUPLHicCw",
-  AUTHORITY: "DEPLOY-AUTHORITY",
+  AUTHORITY: "CfvH1W3AWr5VGyBuAj2wJaFsMFo8nTbKmiasaaHrKXAC",
 };

@@ -189,7 +189,7 @@ test/e2e-local.js      6-check integration suite (local validator)
 test/e2e-devnet.js     same suite against devnet (VP_AUTHORITY=<b58>)
 scripts/test-local.sh  build + validator + tests, prints RESULT
 scripts/devnet-demo.sh faucet -> deploy -> init -> 2 deposits -> writes docs/DEVNET_EVIDENCE.md
-dashboard/             static read-only dashboard + simulate button (GitHub Pages)
+docs/               static read-only dashboard (GitHub Pages root; also holds evidence md) + simulate button (GitHub Pages)
 docs/                  recorded evidence (deployment, test output, video script)
 ```
 
